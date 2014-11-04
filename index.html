@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en" ng-app="Dashboard">
+<head>
+		<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Ocajo App</title>
+
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"/>
+
+	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css"/>
+
+	<link rel="stylesheet" href="css/dashboard/dashboard.css"/>
+
+	<!-- SCRIPTS -->
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-cookies/angular-cookies.js"></script>
+	<script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
+	<script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="lib/angular-ui-router/angular-ui-router.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular-resource.min.js"></script>
+
+	<script src="js/dashboard.js"></script>
+	<!-- SCRIPTS -->
+
+</head>
+<body ng-controller="MasterCtrl">
+	<div id="page-wrapper" ng-class="{'active': toggle}" ng-cloak>
+
+		<!-- Sidebar -->
+
+		<div id="sidebar-wrapper" ng-show="loggedin">
+			<ul class="sidebar">
+				<li class="sidebar-main">
+					<a href="#" ng-click="toggleSidebar()">
+						ocajo
+						<span class="menu-icon glyphicon glyphicon-transfer"></span>
+					</a>
+				</li>
+				<li class="sidebar-title"><span>PROJECTS</span></li>
+				<li class="sidebar-list" ng-repeat="project in projects">
+					<a ui-sref="project({projectId: project.id})">{{ project.name }} <span class="menu-icon fa fa-tasks" title="{{ project.name }}"></span></a>
+				</li>
+			</ul>
+			<div class="sidebar-footer">
+				<div class="col-xs-4">
+					<a href="https://github.com/Ehesp/Responsive-Dashboard" target="_blank">
+						Github
+					</a>
+				</div>
+				<div class="col-xs-4">
+					<a href="#" target="_blank">
+						About
+					</a>
+				</div>
+				<div class="col-xs-4">
+					<a href="#">
+						Support
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- End Sidebar -->
+
+		<div id="content-wrapper">
+			<div class="page-content">
+				<!-- Main Content -->
+				<section data-ui-view></section>
+			</div><!-- End Page Content -->
+		</div><!-- End Content Wrapper -->
+	</div><!-- End Page Wrapper -->
+
+	<script type="text/ng-template" id="dashboard.html">
+
+		<!-- Header Bar -->
+		<div class="row header" ng-show="loggedin">
+			<div class="col-xs-12">
+				<div class="user pull-right">
+					<div class="item dropdown">
+						<a href="#" class="dropdown-toggle">
+							<img src="img/avatar.jpg">
+						</a>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li class="dropdown-header">
+								Joe Bloggs
+							</li>
+							<li class="divider"></li>
+							<li class="link">
+								<a href="#">
+									Profile
+								</a>
+							</li>
+							<li class="link">
+								<a href="#">
+									Menu Item
+								</a>
+							</li>
+							<li class="link">
+								<a href="#">
+									Menu Item
+								</a>
+							</li>
+							<li class="divider"></li>
+							<li class="link">
+								<a href="#">
+									Logout
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="item dropdown">
+					 <a href="#" class="dropdown-toggle">
+							<i class="fa fa-bell-o"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li class="dropdown-header">
+								Notifications
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="#">Server Down!</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="meta">
+					<div class="page">
+						{{ project.name }}
+					</div>
+					<div class="breadcrumb-links">
+						Overview
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- End Header Bar -->
+
+		<div class="row alerts-container" data-ng-controller="AlertsCtrl" data-ng-show="alerts.length">
+			<div class="col-xs-12">
+				<alert data-ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-3 col-md-6 col-xs-12">
+				<div class="widget">
+					<div class="widget-body">
+						<div class="widget-icon green pull-left">
+							<i class="fa fa-users"></i>
+						</div>
+						<div class="widget-content pull-left">
+							<div class="title">80</div>
+							<div class="comment">Users</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 col-xs-12">
+				<div class="widget">
+					<div class="widget-body">
+						<div class="widget-icon red pull-left">
+							<i class="fa fa-tasks"></i>
+						</div>
+						<div class="widget-content pull-left">
+							<div class="title">16</div>
+							<div class="comment">Servers</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 col-xs-12">
+				<div class="widget">
+					<div class="widget-body">
+						<div class="widget-icon orange pull-left">
+							<i class="fa fa-sitemap"></i>
+						</div>
+						<div class="widget-content pull-left">
+							<div class="title">225</div>
+							<div class="comment">Documents</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div class="spacer visible-xs"></div>
+			<div class="col-lg-3 col-md-6 col-xs-12">
+				<div class="widget">
+					<div class="widget-body">
+						<div class="widget-icon blue pull-left">
+							<i class="fa fa-support"></i>
+						</div>
+						<div class="widget-content pull-left">
+							<div class="title">62</div>
+							<div class="comment">Tickets</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="widget">
+					<div class="widget-header">
+						<i class="fa fa-tasks"></i> Reports
+					</div>
+					<div class="widget-body medium no-padding">
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr class="clearfix" ui-sref="report({ reportId: report.id })" ng-repeat="report in reports">
+										<td class="reporttitle">{{ report.title }}</td>
+										<td class="occurrences"><span class="badge">{{ report.occurrences }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Main Content -->
+	</script>
+
+	<script type="text/ng-template" id="login.html">
+		<div class="row" data-ng-controller="LoginCtrl">
+			<div class="col-lg-12">
+				<h1>Log in!</h1>
+
+				<alert type="danger" ng-show="faillogin">The email or password are incorrect</alert>
+
+				<input class="form-control" type="text" ng-model="email" placeholder="E-mail"><br>
+				<input class="form-control" type="password" ng-model="password" placeholder="Contraseña">
+				<br><br>
+				<button class="btn" ng-click="login(email, password)">Log in</button>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="home.html">
+		<div class="row" data-ng-controller="HomeCtrl">
+			<div class="col-lg-12">
+				<h1>Home</h1>
+
+				<p>Ni idea qué meter acá</p>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="report.html">
+		<!-- Header Bar -->
+		<div class="row header" ng-show="loggedin">
+			<div class="col-xs-12">
+				<div class="occurrences pull-right">
+					<span class="badge">{{ report.occurrences }}</span>
+				</div>
+				<div class="meta">
+					<div class="page">
+						{{ report.project.name }}
+					</div>
+					<div class="breadcrumb-links">
+						{{ report.environment }}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- End Header Bar -->
+
+		<div class="row">
+			<div class="col-lg-12">
+				<p class="lead">{{ report.title }}</p>
+
+				<div class="table-responsive">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>File</td>
+								<td class="text-muted">{{ report.file }}:{{ report.line }}</td>
+							</tr>
+							<tr>
+								<td>Language</td>
+								<td class="text-muted">{{ report.language_text }}</td>
+							</tr>
+							<tr>
+								<td>First seen</td>
+								<td class="text-muted">{{ report.first_seen }}</td>
+							</tr>
+							<tr>
+								<td>Last seen</td>
+								<td class="text-muted">{{ report.last_seen }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="well">
+					<div ng-show="!error">
+						<rd-loading></rd-loading>
+					</div>
+					<div ng-show="error">
+						<div class="errordetail table-responsive">
+							<table class="table">
+								<tr>
+									<td><strong>URL</strong></td>
+									<td class="text-muted"><a href="{{ error.url }}" target="_blank">{{ error.url }}</a></td>
+								</tr>
+								<tr>
+									<td><strong>Time</strong></td>
+									<td class="text-muted">{{ error.created_at }}</td>
+								</tr>
+								<tr>
+									<td><strong>Method</strong></td>
+									<td class="text-muted">{{ error.method }}</td>
+								</tr>
+								<tr ng-show="error.bundle">
+									<td><strong>Bundle</strong></td>
+									<td class="text-muted">{{ error.bundle }}</td>
+								</tr>
+								<tr ng-show="error.controller">
+									<td><strong>Controller</strong></td>
+									<td class="text-muted">{{ error.controller }}</td>
+								</tr>
+								<tr ng-show="error.action">
+									<td><strong>Action</strong></td>
+									<td class="text-muted">{{ error.action }}</td>
+								</tr>
+								<tr ng-show="error.routing">
+									<td><strong>Routing</strong></td>
+									<td class="text-muted">{{ error.routing }}</td>
+								</tr>
+								<tr>
+									<td><strong>Server Data</strong></td>
+									<td class="text-muted">
+										<pre ng-show="toggledserver">
+											{{ error.server_data | json }}
+										</pre>
+										<button class="btn btn-small" ng-click="toggleServer()">{{ !toggledserver ? "Show" : "Hide" }}</button>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>GET Data</strong></td>
+									<td class="text-muted">
+										<pre ng-show="toggledget">
+											{{ error.get_data | json }}
+										</pre>
+										<button class="btn btn-small" ng-click="toggleGet()">{{ !toggledget ? "Show" : "Hide" }}</button>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>POST Data</strong></td>
+									<td class="text-muted">
+										<pre ng-show="toggledpost">
+											{{ error.post_data | json }}
+										</pre>
+										<button class="btn btn-small" ng-click="togglePost()">{{ !toggledpost ? "Show" : "Hide" }}</button>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Session Data</strong></td>
+									<td class="text-muted">
+										<pre ng-show="toggledsession">
+											{{ error.session_data | json }}
+										</pre>
+										<button class="btn btn-small" ng-click="toggleSession()">{{ !toggledsession ? "Show" : "Hide" }}</button>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Context</strong></td>
+									<td class="text-muted">
+										<pre ng-show="toggledcontext">
+											{{ error.context | json }}
+										</pre>
+										<button class="btn btn-small" ng-click="toggleContext()">{{ !toggledcontext ? "Show" : "Hide" }}</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+</body>
+</html>
