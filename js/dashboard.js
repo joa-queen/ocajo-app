@@ -1,6 +1,6 @@
 (function(){ 
 var app = angular.module('Dashboard', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngResource']);
-app.constant('apiUrl', 'http://local.api.ocajo.com/');
+app.constant('apiUrl', 'http://api.ocajo.com/');
 app.value('sessid', null);
 
 app.service('ProjectsProvider', ['$resource', 'apiUrl', '$rootScope', function($resource, apiUrl, $rootScope) {
